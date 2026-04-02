@@ -1,0 +1,80 @@
+{
+  "id": "calendar",
+  "name": "Calendar",
+  "version": "0.0.1",
+  "description": "AI-assisted scheduling with human-in-the-loop steering and interpretability.",
+
+  "capabilities": {
+    "hasHumanSteering": true
+  },
+
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "defaultCalendarId": {
+        "type": "string",
+        "description": "ID of the calendar to use for new events."
+      },
+      "timezone": {
+        "type": "string",
+        "description": "IANA timezone string; defaults to host application timezone."
+      },
+      "steeringThresholds": {
+        "type": "object",
+        "description": "Confidence thresholds that control how the steering panel handles proposals.",
+        "properties": {
+          "autoApprove": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.85,
+            "description": "Proposals with confidence ≥ this value may skip explicit approval (green tier)."
+          },
+          "requireExplicit": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.6,
+            "description": "Proposals with confidence < this value require explicit human approval (red tier)."
+          },
+          "warnBelow": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.85,
+            "description": "Proposals with confidence < this value show an amber warning and top-2 influence factors."
+          }
+        },
+        "required": ["autoApprove", "requireExplicit", "warnBelow"]
+      }
+    }
+  },
+
+  "uiComponents": [
+    {
+      "id": "calendar-view",
+      "label": "Calendar",
+      "path": "./components/CalendarView"
+    },
+    {
+      "id": "event-detail",
+      "label": "Event Detail",
+      "path": "./components/EventDetail"
+    },
+    {
+      "id": "event-form",
+      "label": "Edit Event",
+      "path": "./components/EventForm"
+    },
+    {
+      "id": "steering-panel",
+      "label": "Pending Proposals",
+      "path": "./components/SteeringPanel"
+    }
+  ],
+
+  "endpoints": {
+    "steering": "/api/steering",
+    "steering/feedback": "/api/steering/feedback"
+  }
+}
